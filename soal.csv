@@ -1,11 +1,11 @@
 teks,jawaban,penjelasan
-Stack bekerja berdasarkan prinsip Last In First Out (LIFO), artinya data yang terakhir masuk akan keluar pertama kali,BENAR,Sesuai definisi: LIFO = yang terakhir masuk, pertama kali keluar
-Prinsip kerja Stack mirip seperti mengambil piring dari tumpukan paling bawah,SALAH,Mirip mengambil piring dari paling atas, bukan bawah
-Operasi Push berfungsi menambahkan data ke bagian atas Stack,BENAR,Push = menambah data ke posisi teratas
-Operasi Pop berfungsi menampilkan semua isi Stack tanpa menghapusnya,SALAH,Pop = mengambil & menghapus data paling atas. Yang hanya melihat = Peek
-Operasi Peek (Top) digunakan untuk melihat data di posisi paling atas tanpa menghapusnya,BENAR,Sesuai materi: Peek hanya melihat, tidak menghapus
-Jika urutan masuk buku: Bahasa Indonesia → Matematika → Informatika, maka yang pertama keluar adalah Bahasa Indonesia,SALAH,Yang terakhir masuk = Informatika → dia yang pertama keluar
-Fitur Undo pada Microsoft Word merupakan salah satu contoh penerapan Stack,BENAR,Riwayat perubahan disimpan bertumpuk, yang terakhir diubah dibatalkan duluan
-Salah satu kelebihan Stack adalah proses penambahan dan penghapusan data berjalan cepat,BENAR,Hanya mengakses bagian atas, prosesnya sangat efisien
-Pada Stack, kita bisa langsung mengambil data yang berada di posisi tengah tanpa mengeluarkan data di atasnya,SALAH,Kekurangan Stack: hanya bisa akses yang paling atas. Data di tengah tidak bisa diambil langsung
-Riwayat tombol Kembali (Back) di peramban internet tidak menggunakan prinsip Stack,SALAH,Riwayat browser = contoh Stack — halaman terakhir dikunjungi, yang pertama bisa dikembalikan
+List menyimpan data secara berurutan,BENAR,Sesuai definisi: data disusun berurutan dengan indeks
+Setiap elemen di List tidak punya nomor urut indeks,SALAH,List punya indeks/nomor urut tiap elemen
+List hanya bisa simpan satu jenis data,SALAH,List bisa simpan berbagai tipe data sekaligus
+Menambah dan menghapus data di List mudah dilakukan,BENAR,Kelebihan List: fleksibel dan mudah diubah
+Antrean pembayaran adalah contoh List,SALAH,Antrean = Queue. Contoh List: daftar hadir, kontak telepon
+Daftar nilai dan daftar menu adalah contoh List,BENAR,Keduanya disusun berurutan dan fleksibel
+List paling efisien untuk data jumlah sangat besar,SALAH,Kekurangan List: kurang efisien untuk data sangat banyak
+Data di List bisa diakses lewat indeks,BENAR,Indeks menunjukkan posisi tiap elemen
+Data di List sudah dimasukkan tidak bisa diubah lagi,SALAH,List memungkinkan pengubahan data
+Pencarian di List selalu cepat meski jutaan data,SALAH,Semakin banyak data, pencarian makin lambat
