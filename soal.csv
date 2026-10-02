@@ -1,5 +1,4 @@
 teks,jawaban,penjelasan
-Memeory adalah tempat menyimpan data,BENAR,memory adalah salah media menyimpanan data
 List menyimpan data secara berurutan,BENAR,Sesuai definisi: data disusun berurutan dengan indeks
 Setiap elemen di List tidak punya nomor urut indeks,SALAH,List punya indeks/nomor urut tiap elemen
 List hanya bisa simpan satu jenis data,SALAH,List bisa simpan berbagai tipe data sekaligus
@@ -10,3 +9,4 @@ List paling efisien untuk data jumlah sangat besar,SALAH,Kekurangan List: kurang
 Data di List bisa diakses lewat indeks,BENAR,Indeks menunjukkan posisi tiap elemen
 Data di List sudah dimasukkan tidak bisa diubah lagi,SALAH,List memungkinkan pengubahan data
 Pencarian di List selalu cepat meski jutaan data,SALAH,Semakin banyak data, pencarian makin lambat
+Memeory adalah tempat menyimpan data,BENAR,memory adalah salah media menyimpanan data
