@@ -1,4 +1,5 @@
 teks,jawaban,penjelasan
+Memeory adalah tempat menyimpan data,BENAR,memory adalah salah media menyimpanan data
 List menyimpan data secara berurutan,BENAR,Sesuai definisi: data disusun berurutan dengan indeks
 Setiap elemen di List tidak punya nomor urut indeks,SALAH,List punya indeks/nomor urut tiap elemen
 List hanya bisa simpan satu jenis data,SALAH,List bisa simpan berbagai tipe data sekaligus
