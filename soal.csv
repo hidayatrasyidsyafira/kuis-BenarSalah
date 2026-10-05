@@ -1,12 +1,21 @@
 teks,jawaban,penjelasan
 List menyimpan data secara berurutan,BENAR,Sesuai definisi: data disusun berurutan dengan indeks
-Setiap elemen di List tidak punya nomor urut indeks,SALAH,List punya indeks/nomor urut tiap elemen
-List hanya bisa simpan satu jenis data,SALAH,List bisa simpan berbagai tipe data sekaligus
-Menambah dan menghapus data di List mudah dilakukan,BENAR,Kelebihan List: fleksibel dan mudah diubah
-Antrean pembayaran adalah contoh List,SALAH,Antrean = Queue. Contoh List: daftar hadir, kontak telepon
+"Daftar hadir siswa dan daftar belanja adalah contoh penerapan struktur data Stack.","SALAH","❌ SALAH: Daftar hadir dan daftar belanja termasuk contoh struktur data List, bukan Stack."
+"Salah satu kelebihan struktur data list adalah sifatnya yang fleksibel dan mudah digunakan.","BENAR","✅ BENAR: List mudah dipelajari dan cocok untuk data yang jumlahnya berubah-ubah."
 Daftar nilai dan daftar menu adalah contoh List,BENAR,Keduanya disusun berurutan dan fleksibel
 List paling efisien untuk data jumlah sangat besar,SALAH,Kekurangan List: kurang efisien untuk data sangat banyak
 Data di List bisa diakses lewat indeks,BENAR,Indeks menunjukkan posisi tiap elemen
 Data di List sudah dimasukkan tidak bisa diubah lagi,SALAH,List memungkinkan pengubahan data
 Pencarian di List selalu cepat meski jutaan data,SALAH,Semakin banyak data, pencarian makin lambat
-Memeory adalah tempat menyimpan data,BENAR,memory adalah salah media menyimpanan data
+"Struktur data adalah cara mengatur, menyimpan, dan mengelola data agar dapat diakses secara efisien.","BENAR","✅ BENAR: Struktur data mengorganisasikan data sehingga proses pengolahan dan pemanfaatannya menjadi lebih efisien."
+Setiap elemen di List tidak punya nomor urut indeks,SALAH,List punya indeks/nomor urut tiap elemen
+List hanya bisa simpan satu jenis data,SALAH,List bisa simpan berbagai tipe data sekaligus
+"List menyimpan sekumpulan data secara acak tanpa urutan tertentu.","SALAH","❌ SALAH: List menyimpan data secara berurutan, setiap posisi memiliki nomor urut atau indeks."
+"Setiap data di dalam list disebut elemen dan dapat diakses berdasarkan posisi atau indeksnya.","BENAR","✅ BENAR: Akses data berdasarkan indeks adalah ciri utama struktur data list."
+Menambah dan menghapus data di List mudah dilakukan,BENAR,Kelebihan List: fleksibel dan mudah diubah
+Antrean pembayaran adalah contoh List,SALAH,Antrean = Queue. Contoh List: daftar hadir, kontak telepon
+"List hanya dapat menyimpan data berupa angka saja, tidak boleh teks atau jenis data lain.","SALAH","❌ SALAH: List dapat menyimpan berbagai tipe data: angka, huruf, teks, maupun objek lainnya."
+"Menambah, menghapus, dan mengubah data adalah operasi yang dapat dilakukan pada struktur data list.","BENAR","✅ BENAR: Fleksibilitas menambah, menghapus, dan mengubah data merupakan keunggulan list."
+"List sangat efisien digunakan untuk menyimpan data dalam jumlah yang sangat besar.","SALAH","❌ SALAH: Kekurangan list: kurang efisien untuk data yang jumlahnya sangat besar, pencarian bisa lebih lama."
+"List, Stack, dan Queue memiliki karakteristik serta cara kerja yang berbeda.","BENAR","✅ BENAR: Ketiganya memiliki sifat khas dan digunakan untuk menyelesaikan masalah yang berbeda pula."
+"Data dalam list tersusun berurutan, namun tidak memiliki nomor urut atau indeks.","SALAH","❌ SALAH: List memiliki indeks/nomor urut, sehingga data dapat dicari berdasarkan posisinya."
