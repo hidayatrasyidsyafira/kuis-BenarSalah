@@ -1,21 +1,21 @@
-teks,jawaban,penjelasan
-List menyimpan data secara berurutan,BENAR,Sesuai definisi: data disusun berurutan dengan indeks
-"Daftar hadir siswa dan daftar belanja adalah contoh penerapan struktur data Stack.","SALAH","❌ SALAH: Daftar hadir dan daftar belanja termasuk contoh struktur data List, bukan Stack."
-"Salah satu kelebihan struktur data list adalah sifatnya yang fleksibel dan mudah digunakan.","BENAR","✅ BENAR: List mudah dipelajari dan cocok untuk data yang jumlahnya berubah-ubah."
-Daftar nilai dan daftar menu adalah contoh List,BENAR,Keduanya disusun berurutan dan fleksibel
-List paling efisien untuk data jumlah sangat besar,SALAH,Kekurangan List: kurang efisien untuk data sangat banyak
-Data di List bisa diakses lewat indeks,BENAR,Indeks menunjukkan posisi tiap elemen
-Data di List sudah dimasukkan tidak bisa diubah lagi,SALAH,List memungkinkan pengubahan data
-Pencarian di List selalu cepat meski jutaan data,SALAH,Semakin banyak data, pencarian makin lambat
-"Struktur data adalah cara mengatur, menyimpan, dan mengelola data agar dapat diakses secara efisien.","BENAR","✅ BENAR: Struktur data mengorganisasikan data sehingga proses pengolahan dan pemanfaatannya menjadi lebih efisien."
-Setiap elemen di List tidak punya nomor urut indeks,SALAH,List punya indeks/nomor urut tiap elemen
-List hanya bisa simpan satu jenis data,SALAH,List bisa simpan berbagai tipe data sekaligus
-"List menyimpan sekumpulan data secara acak tanpa urutan tertentu.","SALAH","❌ SALAH: List menyimpan data secara berurutan, setiap posisi memiliki nomor urut atau indeks."
-"Setiap data di dalam list disebut elemen dan dapat diakses berdasarkan posisi atau indeksnya.","BENAR","✅ BENAR: Akses data berdasarkan indeks adalah ciri utama struktur data list."
-Menambah dan menghapus data di List mudah dilakukan,BENAR,Kelebihan List: fleksibel dan mudah diubah
-Antrean pembayaran adalah contoh List,SALAH,Antrean = Queue. Contoh List: daftar hadir, kontak telepon
-"List hanya dapat menyimpan data berupa angka saja, tidak boleh teks atau jenis data lain.","SALAH","❌ SALAH: List dapat menyimpan berbagai tipe data: angka, huruf, teks, maupun objek lainnya."
-"Menambah, menghapus, dan mengubah data adalah operasi yang dapat dilakukan pada struktur data list.","BENAR","✅ BENAR: Fleksibilitas menambah, menghapus, dan mengubah data merupakan keunggulan list."
-"List sangat efisien digunakan untuk menyimpan data dalam jumlah yang sangat besar.","SALAH","❌ SALAH: Kekurangan list: kurang efisien untuk data yang jumlahnya sangat besar, pencarian bisa lebih lama."
-"List, Stack, dan Queue memiliki karakteristik serta cara kerja yang berbeda.","BENAR","✅ BENAR: Ketiganya memiliki sifat khas dan digunakan untuk menyelesaikan masalah yang berbeda pula."
-"Data dalam list tersusun berurutan, namun tidak memiliki nomor urut atau indeks.","SALAH","❌ SALAH: List memiliki indeks/nomor urut, sehingga data dapat dicari berdasarkan posisinya."
+Pernyataan,Jawaban,Penjelasan
+"Stack bekerja dengan prinsip Last In First Out (LIFO).","BENAR","✅ BENAR: Data yang terakhir masuk akan menjadi yang pertama keluar."
+"Prinsip LIFO artinya data yang pertama masuk akan keluar terakhir.","SALAH","❌ SALAH: LIFO = yang terakhir masuk → pertama keluar."
+"Konsep Stack mirip dengan antrean beli tiket di bioskop.","SALAH","❌ SALAH: Stack mirip tumpukan piring/buku. Antrean = Queue."
+"Operasi Push berfungsi mengambil data dari bagian atas Stack.","SALAH","❌ SALAH: Push = menambahkan data ke atas. Pop = mengambil/menghapus."
+"Operasi Pop berfungsi menghapus data yang berada di posisi paling atas Stack.","BENAR","✅ BENAR: Pop mengambil dan menghapus data paling atas."
+"Peek (Top) berfungsi melihat data paling atas tanpa menghapusnya.","BENAR","✅ BENAR: Peek hanya membaca data, tidak mengubah isi Stack."
+"Jika ditumpuk: Buku A → Buku B → Buku C, maka yang pertama keluar adalah Buku A.","SALAH","❌ SALAH: Yang terakhir masuk = Buku C → dialah yang pertama keluar."
+"Tumpukan piring adalah contoh penerapan Stack dalam kehidupan sehari-hari.","BENAR","✅ BENAR: Piring yang ditaruh paling atas diambil terlebih dahulu."
+"Tombol Undo di Microsoft Word bekerja berdasarkan prinsip Stack.","BENAR","✅ BENAR: Setiap perubahan disimpan, yang terakhir dilakukan dibatalkan duluan."
+"Riwayat halaman mundur (Back) di peramban internet menggunakan prinsip Queue.","SALAH","❌ SALAH: Riwayat mundur menggunakan Stack, bukan Queue."
+"Salah satu kelebihan Stack adalah proses penambahan dan penghapusan berjalan cepat.","BENAR","✅ BENAR: Hanya mengakses bagian atas, sehingga prosesnya sangat efisien."
+"Stack dapat mengakses data di posisi tengah secara langsung.","SALAH","❌ SALAH: Kekurangan Stack: hanya bisa mengakses data paling atas."
+"Stack cocok digunakan untuk fitur mengembalikan perintah (Undo).","BENAR","✅ BENAR: Prinsip LIFO sangat sesuai untuk membatalkan langkah berurutan."
+"Setelah data di-Pop dari Stack, data tersebut masih tersimpan di dalamnya.","SALAH","❌ SALAH: Pop mengambil sekaligus menghapus data dari Stack."
+"Operasi Push menambahkan data ke posisi paling bawah Stack.","SALAH","❌ SALAH: Push menambahkan data ke posisi paling atas."
+"Tumpukan buku di meja termasuk contoh penerapan struktur data Stack.","BENAR","✅ BENAR: Buku yang ditaruh paling atas diambil terlebih dahulu."
+"Stack termasuk struktur data yang rumit dan sulit dipahami.","SALAH","❌ SALAH: Salah satu kelebihannya: sederhana dan mudah dipelajari."
+"Jika Stack kosong, operasi Pop tetap dapat dijalankan tanpa masalah.","SALAH","❌ SALAH: Tidak ada data yang diambil, akan terjadi kesalahan."
+"Aplikasi desain grafis yang memiliki fitur Undo menggunakan konsep Stack.","BENAR","✅ BENAR: Setiap perubahan dicatat, yang terakhir dibatalkan lebih dulu."
+"Data yang berada di paling bawah Stack akan keluar paling akhir.","BENAR","✅ BENAR: Sesuai LIFO: yang pertama masuk → keluar paling akhir."
