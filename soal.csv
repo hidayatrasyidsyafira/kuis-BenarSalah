@@ -1,4 +1,3 @@
-Pernyataan,Jawaban,Penjelasan
 "Stack bekerja dengan prinsip Last In First Out (LIFO).","BENAR","✅ BENAR: Data yang terakhir masuk akan menjadi yang pertama keluar."
 "Prinsip LIFO artinya data yang pertama masuk akan keluar terakhir.","SALAH","❌ SALAH: LIFO = yang terakhir masuk → pertama keluar."
 "Konsep Stack mirip dengan antrean beli tiket di bioskop.","SALAH","❌ SALAH: Stack mirip tumpukan piring/buku. Antrean = Queue."
