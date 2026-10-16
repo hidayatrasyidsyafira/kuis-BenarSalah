@@ -425,25 +425,51 @@ function simpanJawaban(indexSoal, pilihan) {
 }
 
 /* ---------- KIRIM KE GOOGLE SHEETS ---------- */
-function kirimKeSheets(data) {
+// function kirimKeSheets(data) {
+//     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
+//         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
+//         return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append("data", JSON.stringify(data));
+
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("POST", URL_GOOGLE_SHEETS, true);
+//     // JANGAN set Content-Type manual — biarkan browser atur untuk FormData
+//     xhr.onload = function() {
+//         console.log("✅ Response dari server:", xhr.responseText);
+//     };
+//     xhr.onerror = function() {
+//         console.error("❌ XHR error");
+//     };
+//     xhr.send(formData);
+// }
+
+    function kirimKeSheets(data) {
     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
         return;
     }
 
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(data));
+    const params = new URLSearchParams({
+        nama: data.nama,
+        kelas: data.kelas,
+        nomor_soal: data.nomor_soal,
+        teks_soal: data.teks_soal,
+        jawaban_siswa: data.jawaban_siswa,
+        waktu_jawab: data.waktu_jawab
+    });
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", URL_GOOGLE_SHEETS, true);
-    // JANGAN set Content-Type manual — biarkan browser atur untuk FormData
-    xhr.onload = function() {
-        console.log("✅ Response dari server:", xhr.responseText);
-    };
-    xhr.onerror = function() {
-        console.error("❌ XHR error");
-    };
-    xhr.send(formData);
+    const urlLengkap = URL_GOOGLE_SHEETS + "?" + params.toString();
+    console.log("🔵 Mengirim ke:", urlLengkap);
+
+    fetch(urlLengkap, {
+        method: "GET",
+        mode: "no-cors"
+    })
+    .then(() => console.log("✅ Terkirim (GET):", data.nama, "soal", data.nomor_soal))
+    .catch(err => console.error("❌ Gagal:", err));
 }
 
 /* ---------- LANJUT OTOMATIS (waktu habis) ---------- */
