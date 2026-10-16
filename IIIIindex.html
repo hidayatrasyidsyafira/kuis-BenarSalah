@@ -488,14 +488,42 @@ function simpanJawaban(indexSoal, pilihan) {
         teksSoal: daftarSoal[indexSoal].teks
     });
 
-    kirimKeSheets({
+    // TIDAK KIRIM KE SHEETS DI SINI
+    // Data akan dikirim sekali di akhir kuis
+}
+
+    /* ---------- KIRIM HASIL AKHIR KE SHEETS (SEKALI) ---------- */
+function kirimHasilAkhir() {
+    // Hitung jumlah jawaban BENAR
+    let jumlahBenar = 0;
+    riwayatJawaban.forEach(r => {
+        if (r.dijawab === true && daftarSoal[r.nomor].jawaban === true) jumlahBenar++;
+    });
+    // Catatan: kalau mau hitung "benar" berdasarkan jawaban siswa saja,
+    // tanpa cek kunci, ganti baris di atas dengan:
+    // riwayatJawaban.forEach(r => { if (r.jawabanTeks === "BENAR") jumlahBenar++; });
+
+    const totalSoal = daftarSoal.length;
+
+    if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
+        console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
+        return;
+    }
+
+    const params = new URLSearchParams({
         nama: namaSiswa,
         kelas: kelasSiswa,
-        nomor_soal: indexSoal + 1,
-        teks_soal: daftarSoal[indexSoal].teks,
-        jawaban_siswa: jawabanTeks,
+        jumlah_benar: jumlahBenar,
+        total_soal: totalSoal,
         waktu_jawab: new Date().toLocaleString("id-ID")
     });
+
+    fetch(URL_GOOGLE_SHEETS + "?" + params.toString(), {
+        method: "GET",
+        mode: "no-cors"
+    })
+    .then(() => console.log(`✅ Hasil terkirim: ${namaSiswa} — ${jumlahBenar}/${totalSoal}`))
+    .catch(err => console.error("❌ Gagal kirim hasil:", err));
 }
 
 /* ---------- KIRIM KE GOOGLE SHEETS (GET via query string) ---------- */
@@ -536,7 +564,10 @@ function tampilHasil() {
     document.getElementById("layar-akhir").style.display = "block";
     document.getElementById("timer-total").style.display = "none";
     document.getElementById("status-kirim").textContent =
-        "📤 Semua jawaban sudah dikirim ke Google Sheets.";
+        "📤 Hasil sudah dikirim ke Google Sheets.";
+
+    // KIRIM HASIL AKHIR KE SHEETS
+    kirimHasilAkhir();
 }
 
 function tutupOverlayDanTampilHasil() {
