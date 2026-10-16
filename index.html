@@ -25,7 +25,6 @@
         }
         h1 { color: #2c3e50; margin-bottom: 25px; font-size: 2rem; line-height: 1.3; }
 
-        /* === FORM IDENTITAS === */
         .form-identitas {
             background: #f0f8ff;
             padding: 25px;
@@ -62,7 +61,6 @@
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.15);
         }
 
-        /* === INFO DURASI TOTAL === */
         .info-durasi {
             background: #fff3cd;
             color: #856404;
@@ -73,6 +71,16 @@
             font-weight: 600;
             text-align: center;
             border-left: 5px solid #ffc107;
+        }
+        .info-durasi .badge-url {
+            display: inline-block;
+            background: #856404;
+            color: #fff3cd;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            font-weight: normal;
         }
 
         .tombol-mulai {
@@ -89,7 +97,6 @@
         }
         .tombol-mulai:hover { transform: scale(1.05); }
 
-        /* === TIMER TOTAL === */
         .timer-total {
             background: linear-gradient(135deg, #fff3cd, #ffe69c);
             padding: 15px;
@@ -189,7 +196,6 @@
             color: #7f8c8d;
         }
 
-        /* === OVERLAY WAKTU HABIS === */
         .overlay-waktu-habis {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -228,11 +234,78 @@
             font-weight: bold;
         }
         .overlay-waktu-habis button:hover { background: #2980b9; }
+
+        /* === PANEL GURU (disembunyikan) === */
+        .panel-guru {
+            display: none;
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: left;
+            border: 2px dashed #66bb6a;
+        }
+        .panel-guru h3 {
+            color: #2e7d32;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .panel-guru .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .panel-guru input {
+            padding: 10px;
+            border: 2px solid #81c784;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100px;
+            text-align: center;
+        }
+        .panel-guru button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .panel-guru button:hover { background: #1b5e20; }
+        .panel-guru .url-output {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            border: 1px solid #81c784;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🧠 Benar atau Salah?<br>Materi Informatika</h1>
+
+        <!-- === PANEL GURU (hanya muncul kalau pakai ?guru=1) === -->
+        <div class="panel-guru" id="panel-guru">
+            <h3>👨‍🏫 Panel Guru</h3>
+            <div class="row">
+                <label>Durasi (menit):</label>
+                <input type="number" id="guru-durasi" value="20" min="1" max="180">
+                <button onclick="buatLinkGuru()">🔗 Buat Link Siswa</button>
+            </div>
+            <div class="url-output" id="guru-output">
+                Link akan muncul di sini...
+            </div>
+            <p style="font-size: 0.85rem; color: #555; margin-top: 10px;">
+                💡 Bagikan link di atas ke siswa. Mereka tidak bisa mengubah durasi.
+            </p>
+        </div>
 
         <!-- === FORM IDENTITAS SISWA === -->
         <div class="form-identitas" id="form-identitas">
@@ -247,9 +320,9 @@
             </div>
         </div>
 
-        <div class="info-durasi">
-            ⏱️ Total waktu pengerjaan: <strong>20 menit</strong><br>
-            <!-- <small style="font-weight: normal;">Soal diacak otomatis untuk setiap siswa</small> -->
+        <div class="info-durasi" id="info-durasi">
+            ⏱️ Total waktu pengerjaan: <strong id="durasi-tampil">20 menit</strong><br>
+            <small style="font-weight: normal;">Soal diacak otomatis untuk setiap siswa</small>
         </div>
 
         <button class="tombol-mulai" id="tombol-mulai" onclick="mulaiKuis()">▶️ MULAI</button>
@@ -265,7 +338,6 @@
                 <button class="tombol tombol-benar" onclick="cekJawaban(true)">✅ BENAR</button>
                 <button class="tombol tombol-salah" onclick="cekJawaban(false)">❌ SALAH</button>
             </div>
-            <button class="lanjut-btn" id="tombol-lanjut" onclick="soalBerikutnya()">Soal Berikutnya →</button>
         </div>
 
         <div class="akhir" id="layar-akhir">
@@ -285,11 +357,10 @@
         </div>
     </div>
 
-    <!-- Overlay Waktu Habis -->
     <div class="overlay-waktu-habis" id="overlay-waktu-habis">
         <div class="box">
             <h2>⏰ Waktu Habis!</h2>
-            <p>Waktu pengerjaan 20 menit sudah berakhir.<br>Jawabanmu sudah tersimpan.</p>
+            <p>Waktu pengerjaan sudah berakhir.<br>Jawabanmu sudah tersimpan.</p>
             <button onclick="tutupOverlayDanTampilHasil()">Lihat Hasil →</button>
         </div>
     </div>
@@ -300,9 +371,43 @@
    ========================================================= */
 const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxHumfJu2Agl0Sk65WZNXFtgcXPmYXgAw4OcqyA8IM7NjNUkNc2DZfC2IbaJIHVmwgS5g/exec";
 
-// Durasi total kuis dalam detik (20 menit = 1200 detik)
-const DURASI_TOTAL_DETIK = 20 * 60;
+// Default kalau URL tidak menyertakan ?durasi=
+const DURASI_DEFAULT_MENIT = 20;
 
+/* =========================================================
+   🎛️ BACA PARAMETER URL
+   =========================================================
+   Contoh pemakaian:
+   - kuis.html                          → durasi 20 menit (default)
+   - kuis.html?durasi=15                → durasi 15 menit
+   - kuis.html?guru=1                   → tampilkan panel guru
+   ========================================================= */
+function ambilParameterURL() {
+    const params = new URLSearchParams(window.location.search);
+    const durasiParam = params.get("durasi");
+    const guruParam = params.get("guru");
+
+    let durasiMenit = DURASI_DEFAULT_MENIT;
+
+    if (durasiParam !== null) {
+        const nilai = parseFloat(durasiParam);
+        if (!isNaN(nilai) && nilai >= 1 && nilai <= 180) {
+            durasiMenit = nilai;
+        } else {
+            console.warn("⚠️ Parameter durasi tidak valid, pakai default 20 menit.");
+        }
+    }
+
+    return {
+        durasiMenit,
+        modeGuru: guruParam === "1"
+    };
+}
+
+const KONFIG = ambilParameterURL();
+const DURASI_TOTAL_DETIK = Math.round(KONFIG.durasiMenit * 60);
+
+/* ---------- STATE ---------- */
 let daftarSoal = [];
 let nomor = 0, sudahDijawab = false;
 let sisaWaktuTotal = DURASI_TOTAL_DETIK, timerInterval;
@@ -312,12 +417,50 @@ let kuisAktif = false;
 
 /* ---------- UTIL: AC AK SOAL (Fisher-Yates Shuffle) ---------- */
 function acakSoal(array) {
-    const arr = [...array]; // salin supaya tidak mengubah asli
+    const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
+}
+
+/* ---------- TAMPILKAN INFO DURASI DI AWAL ---------- */
+function tampilkanInfoDurasi() {
+    const menit = KONFIG.durasiMenit;
+    document.getElementById("durasi-tampil").textContent = `${menit} menit`;
+
+    const mm = String(Math.floor(menit)).padStart(2, "0");
+    const ss = String(Math.round((menit % 1) * 60)).padStart(2, "0");
+    document.getElementById("timer-total").textContent = `⏱️ Sisa Waktu: ${mm}:${ss}`;
+}
+
+/* ---------- PANEL GURU ---------- */
+function setupPanelGuru() {
+    if (!KONFIG.modeGuru) return;
+
+    document.getElementById("panel-guru").style.display = "block";
+
+    // Sembunyikan form siswa & tombol mulai selama di panel guru
+    document.getElementById("form-identitas").style.display = "none";
+    document.getElementById("tombol-mulai").style.display = "none";
+    document.getElementById("info-durasi").style.display = "none";
+
+    document.getElementById("guru-durasi").value = DURASI_DEFAULT_MENIT;
+    buatLinkGuru();
+}
+
+function buatLinkGuru() {
+    const menit = parseInt(document.getElementById("guru-durasi").value);
+    if (isNaN(menit) || menit < 1 || menit > 180) {
+        alert("⚠️ Durasi harus antara 1–180 menit");
+        return;
+    }
+
+    const baseUrl = window.location.origin + window.location.pathname;
+    const linkSiswa = `${baseUrl}?durasi=${menit}`;
+
+    document.getElementById("guru-output").textContent = linkSiswa;
 }
 
 /* ---------- AMBIL SOAL ---------- */
@@ -380,23 +523,19 @@ async function mulaiKuis() {
     // === ACAK SOAL SETIAP SISWA MULAI ===
     daftarSoal = acakSoal(daftarSoal);
 
-    // Sembunyikan form & info
     document.getElementById("form-identitas").style.display = "none";
     document.querySelector(".info-durasi").style.display = "none";
     document.getElementById("tombol-mulai").style.display = "none";
 
-    // Tampilkan info siswa
     const info = document.getElementById("info-siswa");
-    info.textContent = `👤 ${namaSiswa} — 🏫 ${kelasSiswa}`;
+    info.textContent = `👤 ${namaSiswa} — 🏫 ${kelasSiswa} — ⏱️ ${KONFIG.durasiMenit} menit`;
     info.style.display = "block";
 
-    // Tampilkan elemen kuis
     document.getElementById("timer-total").style.display = "block";
     document.getElementById("progress").style.display = "block";
     document.getElementById("teks-soal").style.display = "flex";
     document.getElementById("tombol-jawaban").style.display = "flex";
 
-    // Mulai timer total 20 menit
     kuisAktif = true;
     sisaWaktuTotal = DURASI_TOTAL_DETIK;
     updateTimerTotal();
@@ -405,7 +544,7 @@ async function mulaiKuis() {
     tampilSoal();
 }
 
-/* ---------- TIMER TOTAL 20 MENIT ---------- */
+/* ---------- TIMER ---------- */
 function mulaiTimerTotal() {
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -415,7 +554,6 @@ function mulaiTimerTotal() {
         if (sisaWaktuTotal <= 0) {
             clearInterval(timerInterval);
             kuisAktif = false;
-            // Waktu habis → akhiri kuis otomatis
             document.getElementById("overlay-waktu-habis").style.display = "flex";
         }
     }, 1000);
@@ -427,26 +565,23 @@ function updateTimerTotal() {
     const detik = sisaWaktuTotal % 60;
     el.textContent = `⏱️ Sisa Waktu: ${String(menit).padStart(2, "0")}:${String(detik).padStart(2, "0")}`;
 
-    // Ubah warna sesuai sisa waktu
     el.classList.remove("warning", "danger");
-    if (sisaWaktuTotal <= 60) {           // 1 menit terakhir
+    if (sisaWaktuTotal <= 60) {
         el.classList.add("danger");
-    } else if (sisaWaktuTotal <= 300) {   // 5 menit terakhir
+    } else if (sisaWaktuTotal <= 300) {
         el.classList.add("warning");
     }
 }
 
 /* ---------- TAMPIL SOAL ---------- */
 function tampilSoal() {
-    if (!kuisAktif) return; // kalau waktu sudah habis, jangan lanjut
+    if (!kuisAktif) return;
 
     sudahDijawab = false;
     document.getElementById("progress").textContent = `Soal ${nomor + 1} dari ${daftarSoal.length}`;
     document.getElementById("teks-soal").textContent = daftarSoal[nomor].teks;
-    document.getElementById("tombol-lanjut").style.display = "none";
     document.getElementById("tombol-jawaban").style.display = "flex";
 
-    // Aktifkan kembali tombol
     document.querySelectorAll(".tombol").forEach(b => b.disabled = false);
 }
 
@@ -456,20 +591,17 @@ function cekJawaban(pilihan) {
     if (sudahDijawab) return;
     sudahDijawab = true;
 
-    // Nonaktifkan tombol
     document.querySelectorAll(".tombol").forEach(b => b.disabled = true);
 
-    // Simpan jawaban ke riwayat & kirim ke Google Sheets
     simpanJawaban(nomor, pilihan);
 
     document.getElementById("tombol-jawaban").style.display = "none";
 
-    // LANGSUNG lanjut ke soal berikutnya (tanpa tombol "Soal Berikutnya")
     if (nomor < daftarSoal.length - 1) {
         setTimeout(() => {
             nomor++;
             tampilSoal();
-        }, 300); // jeda singkat 300ms biar tidak terlalu cepat
+        }, 300);
     } else {
         setTimeout(tampilHasil, 500);
     }
@@ -498,7 +630,7 @@ function simpanJawaban(indexSoal, pilihan) {
     });
 }
 
-/* ---------- KIRIM KE GOOGLE SHEETS (GET via query string) ---------- */
+/* ---------- KIRIM KE GOOGLE SHEETS ---------- */
 function kirimKeSheets(data) {
     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
@@ -518,14 +650,8 @@ function kirimKeSheets(data) {
         method: "GET",
         mode: "no-cors"
     })
-    .then(() => console.log("✅ Terkirim (GET):", data.nama, "soal", data.nomor_soal))
+    .then(() => console.log("✅ Terkirim:", data.nama, "soal", data.nomor_soal))
     .catch(err => console.error("❌ Gagal:", err));
-}
-
-/* ---------- SOAL BERIKUTNYA (tidak dipakai lagi karena auto-lanjut) ---------- */
-function soalBerikutnya() {
-    nomor++;
-    tampilSoal();
 }
 
 /* ---------- HASIL AKHIR ---------- */
@@ -592,15 +718,19 @@ function mulaiUlang() {
     document.getElementById("progress").style.display = "none";
 
     document.getElementById("form-identitas").style.display = "block";
-    document.querySelector(".info-durasi").style.display = "block";
+    document.getElementById("info-durasi").style.display = "block";
     document.getElementById("tombol-mulai").style.display = "block";
 
     document.getElementById("input-nama").value = "";
     document.getElementById("input-kelas").value = "";
     document.getElementById("input-nama").focus();
+
+    tampilkanInfoDurasi();
 }
 
 /* ---------- INIT ---------- */
+tampilkanInfoDurasi();
+setupPanelGuru();
 ambilSoal();
 </script>
 </body>
