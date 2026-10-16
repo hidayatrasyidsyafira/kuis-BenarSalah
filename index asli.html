@@ -24,6 +24,48 @@
             text-align: center;
         }
         h1 { color: #2c3e50; margin-bottom: 25px; font-size: 2rem; line-height: 1.3; }
+
+        /* === FORM IDENTITAS === */
+        .form-identitas {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: left;
+            border: 2px solid #4facfe;
+        }
+        .form-identitas h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #0c5460;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #b8d8e8;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.2s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.15);
+        }
+
         .pengaturan {
             background: #e3f2fd;
             padding: 15px;
@@ -112,6 +154,7 @@
         .tombol:hover { transform: scale(1.05); }
         .tombol-benar { background: #2ecc71; color: white; }
         .tombol-salah { background: #e74c3c; color: white; }
+        .tombol:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .lanjut-btn {
             background: #3498db;
             color: white;
@@ -125,16 +168,45 @@
         }
         .lanjut-btn:hover { background: #2980b9; }
         .akhir, .pembahasan { display: none; }
-        .daftar-soal { text-align: left; margin-top: 20px; }
+        .daftar-soal { text-align: left; margin-top: 20px; max-height: 400px; overflow-y: auto; }
         .item-soal { padding: 15px; border-bottom: 1px solid #eee; }
         .label-benar { color: #2ecc71; font-weight: bold; }
         .label-salah { color: #e74c3c; font-weight: bold; }
+        .label-netral { color: #3498db; font-weight: bold; }
+
+        .info-siswa {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 0.95rem;
+        }
+        .status-kirim {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🧠 Benar atau Salah?<br>Materi Informatika</h1>
-        
+
+        <!-- === FORM IDENTITAS SISWA === -->
+        <div class="form-identitas" id="form-identitas">
+            <h3>👤 Isi Data Diri Dulu Ya</h3>
+            <div class="form-group">
+                <label for="input-nama">Nama Lengkap</label>
+                <input type="text" id="input-nama" placeholder="Contoh: Budi Santoso" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="input-kelas">Kelas</label>
+                <input type="text" id="input-kelas" placeholder="Contoh: XI IPA 1" autocomplete="off">
+            </div>
+        </div>
+
         <div class="pengaturan" id="pengaturan">
             <label>⏱️ Waktu per soal (detik):</label>
             <input type="number" id="input-waktu" value="20" min="5" max="120">
@@ -143,9 +215,11 @@
 
         <button class="tombol-mulai" id="tombol-mulai" onclick="mulaiKuis()">▶️ MULAI</button>
 
+        <div class="info-siswa" id="info-siswa"></div>
+
         <div class="progress" id="progress">Soal 1 dari 0</div>
         <div class="timer" id="timer">⏱️ Waktu: 20 detik</div>
-        
+
         <div id="layar-soal">
             <div class="soal-box" id="teks-soal"></div>
             <div class="tombol-group" id="tombol-jawaban">
@@ -157,11 +231,11 @@
 
         <div class="akhir" id="layar-akhir">
             <h2 style="font-size: 1.8rem; margin-bottom: 25px;">🎉 Permainan Selesai!</h2>
-            <!-- Bagian skor akhir dinonaktifkan -->
-            <!-- <p style="margin: 25px 0; font-size: 1.4rem;">Skor Akhir Kamu:</p>
-            <p style="font-size: 3rem; font-weight: bold; color: #2c3e50;" id="skor-akhir">0/0</p>
-            <p style="margin: 25px 0; font-size: 1.1rem;" id="pesan-akhir"></p> -->
-            <button class="lanjut-btn" style="display:inline-block;" onclick="tampilkanPembahasan()">📖 Lihat Semua Jawaban</button>
+            <p style="margin: 20px 0; font-size: 1.1rem; color: #555;">
+                Jawabanmu sudah tersimpan. Terima kasih sudah mengerjakan! 🙌
+            </p>
+            <div class="status-kirim" id="status-kirim"></div>
+            <!-- <button class="lanjut-btn" style="display:inline-block;" onclick="tampilkanPembahasan()">📖 Lihat Semua Jawaban</button> -->
             <button class="lanjut-btn" style="background:#2ecc71; display:inline-block;" onclick="mulaiUlang()">🔄 Mulai Ulang</button>
         </div>
 
@@ -173,11 +247,19 @@
     </div>
 
 <script>
+/* =========================================================
+   ⚙️ KONFIGURASI GOOGLE SHEETS
+   Ganti URL di bawah dengan URL Web App dari Google Apps Script
+   ========================================================= */
+const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxHumfJu2Agl0Sk65WZNXFtgcXPmYXgAw4OcqyA8IM7NjNUkNc2DZfC2IbaJIHVmwgS5g/exec";
+
 let daftarSoal = [];
-let nomor = 0, skor = 0, sudahDijawab = false;
+let nomor = 0, sudahDijawab = false;
 let sisaWaktu = 20, waktuDefault = 20, timerInterval;
 let riwayatJawaban = [];
+let namaSiswa = "", kelasSiswa = "";
 
+/* ---------- UTIL ---------- */
 function terapkanWaktu() {
     const nilai = parseInt(document.getElementById("input-waktu").value);
     if (nilai >= 5 && nilai <= 120) {
@@ -189,6 +271,7 @@ function terapkanWaktu() {
     }
 }
 
+/* ---------- AMBIL SOAL ---------- */
 async function ambilSoal() {
     try {
         const res = await fetch("soal.csv");
@@ -205,15 +288,15 @@ async function ambilSoal() {
             hasil.push(bagian.trim());
             return hasil;
         });
-        
+
         daftarSoal = [];
         for (let i = 1; i < baris.length; i++) {
             const k = baris[i];
             if (!k || k.length < 3) continue;
-            const teks = k[0].replace(/^"|"$/g, "");
+            const teksSoal = k[0].replace(/^"|"$/g, "");
             const jawab = k[1].toUpperCase().replace(/^"|"$/g, "") === "BENAR";
             const jelas = k[2].replace(/^"|"$/g, "") || (jawab ? "✅ Benar!" : "❌ Salah!");
-            if (teks) daftarSoal.push({ teks, jawaban: jawab, penjelasan: jelas });
+            if (teksSoal) daftarSoal.push({ teks: teksSoal, jawaban: jawab, penjelasan: jelas });
         }
     } catch {
         daftarSoal = [
@@ -224,24 +307,58 @@ async function ambilSoal() {
     }
 }
 
+/* ---------- VALIDASI & MULAI ---------- */
 async function mulaiKuis() {
+    const nama = document.getElementById("input-nama").value.trim();
+    const kelas = document.getElementById("input-kelas").value.trim();
+
+    if (!nama) {
+        alert("⚠️ Nama tidak boleh kosong!");
+        document.getElementById("input-nama").focus();
+        return;
+    }
+    if (!kelas) {
+        alert("⚠️ Kelas tidak boleh kosong!");
+        document.getElementById("input-kelas").focus();
+        return;
+    }
+
+    namaSiswa = nama;
+    kelasSiswa = kelas;
+
     await ambilSoal();
-    document.getElementById("tombol-mulai").style.display = "none";
+
+    // Sembunyikan form & pengaturan
+    document.getElementById("form-identitas").style.display = "none";
     document.getElementById("pengaturan").style.display = "none";
+    document.getElementById("tombol-mulai").style.display = "none";
+
+    // Tampilkan info siswa
+    const info = document.getElementById("info-siswa");
+    info.textContent = `👤 ${namaSiswa} — 🏫 ${kelasSiswa}`;
+    info.style.display = "block";
+
+    // Tampilkan elemen kuis
     document.getElementById("progress").style.display = "block";
     document.getElementById("timer").style.display = "block";
     document.getElementById("teks-soal").style.display = "flex";
     document.getElementById("tombol-jawaban").style.display = "flex";
+
     tampilSoal();
 }
 
+/* ---------- TAMPIL SOAL ---------- */
 function tampilSoal() {
     sudahDijawab = false;
     sisaWaktu = waktuDefault;
-    document.getElementById("progress").textContent = `Soal ${nomor+1} dari ${daftarSoal.length}`;
+    document.getElementById("progress").textContent = `Soal ${nomor + 1} dari ${daftarSoal.length}`;
     document.getElementById("teks-soal").textContent = daftarSoal[nomor].teks;
     document.getElementById("tombol-lanjut").style.display = "none";
     document.getElementById("tombol-jawaban").style.display = "flex";
+
+    // Aktifkan kembali tombol
+    document.querySelectorAll(".tombol").forEach(b => b.disabled = false);
+
     document.getElementById("timer").textContent = `⏱️ Waktu: ${sisaWaktu} detik`;
     mulaiHitungMundur();
 }
@@ -254,25 +371,28 @@ function mulaiHitungMundur() {
         if (sisaWaktu <= 0) {
             clearInterval(timerInterval);
             if (!sudahDijawab) {
-                riwayatJawaban.push({ nomor, dijawab: null, benar: false });
+                // Waktu habis → catat sebagai tidak dijawab
+                simpanJawaban(nomor, null);
                 lanjutOtomatis();
             }
         }
     }, 1000);
 }
 
+/* ---------- CEK JAWABAN (hanya untuk flow UI, tidak ada skor) ---------- */
 function cekJawaban(pilihan) {
     if (sudahDijawab) return;
     sudahDijawab = true;
     clearInterval(timerInterval);
-    
-    const benar = pilihan === daftarSoal[nomor].jawaban;
-    riwayatJawaban.push({ nomor, dijawab: pilihan, benar });
-    
-    if (benar) skor++;
-    
+
+    // Nonaktifkan tombol
+    document.querySelectorAll(".tombol").forEach(b => b.disabled = true);
+
+    // Simpan jawaban ke riwayat & kirim ke Google Sheets
+    simpanJawaban(nomor, pilihan);
+
     document.getElementById("tombol-jawaban").style.display = "none";
-    
+
     if (nomor < daftarSoal.length - 1) {
         document.getElementById("tombol-lanjut").style.display = "block";
     } else {
@@ -280,8 +400,82 @@ function cekJawaban(pilihan) {
     }
 }
 
+/* ---------- SIMPAN JAWABAN ---------- */
+function simpanJawaban(indexSoal, pilihan) {
+    // pilihan: true = BENAR, false = SALAH, null = tidak dijawab (waktu habis)
+    let jawabanTeks = "TIDAK DIJAWAB";
+    if (pilihan === true) jawabanTeks = "BENAR";
+    else if (pilihan === false) jawabanTeks = "SALAH";
+
+    riwayatJawaban.push({
+        nomor: indexSoal,
+        dijawab: pilihan,
+        jawabanTeks: jawabanTeks
+    });
+
+    // Kirim ke Google Sheets
+    kirimKeSheets({
+        nama: namaSiswa,
+        kelas: kelasSiswa,
+        nomor_soal: indexSoal + 1,
+        teks_soal: daftarSoal[indexSoal].teks,
+        jawaban_siswa: jawabanTeks,
+        waktu_jawab: new Date().toLocaleString("id-ID")
+    });
+}
+
+/* ---------- KIRIM KE GOOGLE SHEETS ---------- */
+// function kirimKeSheets(data) {
+//     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
+//         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
+//         return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append("data", JSON.stringify(data));
+
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("POST", URL_GOOGLE_SHEETS, true);
+//     // JANGAN set Content-Type manual — biarkan browser atur untuk FormData
+//     xhr.onload = function() {
+//         console.log("✅ Response dari server:", xhr.responseText);
+//     };
+//     xhr.onerror = function() {
+//         console.error("❌ XHR error");
+//     };
+//     xhr.send(formData);
+// }
+
+    function kirimKeSheets(data) {
+    if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
+        console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
+        return;
+    }
+
+    const params = new URLSearchParams({
+        nama: data.nama,
+        kelas: data.kelas,
+        nomor_soal: data.nomor_soal,
+        teks_soal: data.teks_soal,
+        jawaban_siswa: data.jawaban_siswa,
+        waktu_jawab: data.waktu_jawab
+    });
+
+    const urlLengkap = URL_GOOGLE_SHEETS + "?" + params.toString();
+    console.log("🔵 Mengirim ke:", urlLengkap);
+
+    fetch(urlLengkap, {
+        method: "GET",
+        mode: "no-cors"
+    })
+    .then(() => console.log("✅ Terkirim (GET):", data.nama, "soal", data.nomor_soal))
+    .catch(err => console.error("❌ Gagal:", err));
+}
+
+/* ---------- LANJUT OTOMATIS (waktu habis) ---------- */
 function lanjutOtomatis() {
     document.getElementById("tombol-jawaban").style.display = "none";
+    document.querySelectorAll(".tombol").forEach(b => b.disabled = true);
     if (nomor < daftarSoal.length - 1) {
         nomor++;
         tampilSoal();
@@ -295,52 +489,64 @@ function soalBerikutnya() {
     tampilSoal();
 }
 
+/* ---------- HASIL AKHIR ---------- */
 function tampilHasil() {
     clearInterval(timerInterval);
     document.getElementById("layar-soal").style.display = "none";
     document.getElementById("layar-akhir").style.display = "block";
-    
-    // Skor dan pesan dinonaktifkan
-    // document.getElementById("skor-akhir").textContent = `${skor}/${daftarSoal.length}`;
-    // const p = skor / daftarSoal.length;
-    // document.getElementById("pesan-akhir").textContent = ...
+    document.getElementById("status-kirim").textContent =
+        "📤 Semua jawaban sudah dikirim ke Google Sheets.";
 }
 
+/* ---------- PEMBAHASAN ---------- */
 function tampilkanPembahasan() {
     document.getElementById("layar-akhir").style.display = "none";
     document.getElementById("layar-pembahasan").style.display = "block";
-    
+
     const wadah = document.getElementById("daftar-pembahasan");
     wadah.innerHTML = "";
-    
+
     daftarSoal.forEach((soal, idx) => {
         const riwayat = riwayatJawaban[idx];
         const div = document.createElement("div");
         div.className = "item-soal";
-        
+
         let statusJawaban = "";
-        if (riwayat.dijawab !== null) {
-            statusJawaban = riwayat.benar 
-                ? `<span class="label-benar">✅ Jawabanmu BENAR</span>`
-                : `<span class="label-salah">❌ Jawabanmu SALAH</span>`;
+        if (riwayat && riwayat.dijawab !== null && riwayat.dijawab !== undefined) {
+            statusJawaban = `<span class="label-netral">📝 Jawabanmu: ${riwayat.jawabanTeks}</span>`;
+        } else {
+            statusJawaban = `<span class="label-salah">⏰ Tidak dijawab (waktu habis)</span>`;
         }
-        
+
         div.innerHTML = `
-            <strong>Soal ${idx+1}:</strong> ${soal.teks}<br>
-            ${statusJawaban}
-            ${statusJawaban ? "<br>" : ""}Jawaban Benar: <strong>${soal.jawaban ? "BENAR" : "SALAH"}</strong><br>
+            <strong>Soal ${idx + 1}:</strong> ${soal.teks}<br>
+            ${statusJawaban}<br>
+            Jawaban Benar: <strong>${soal.jawaban ? "BENAR" : "SALAH"}</strong><br>
             <em>${soal.penjelasan}</em>
         `;
         wadah.appendChild(div);
     });
 }
 
+/* ---------- MULAI ULANG ---------- */
 function mulaiUlang() {
-    nomor = 0; skor = 0; riwayatJawaban = [];
+    nomor = 0;
+    riwayatJawaban = [];
+    namaSiswa = "";
+    kelasSiswa = "";
+
     document.getElementById("layar-akhir").style.display = "none";
     document.getElementById("layar-pembahasan").style.display = "none";
-    document.getElementById("tombol-mulai").style.display = "block";
+    document.getElementById("layar-soal").style.display = "block";
+    document.getElementById("info-siswa").style.display = "none";
+
+    document.getElementById("form-identitas").style.display = "block";
     document.getElementById("pengaturan").style.display = "block";
+    document.getElementById("tombol-mulai").style.display = "block";
+
+    document.getElementById("input-nama").value = "";
+    document.getElementById("input-kelas").value = "";
+    document.getElementById("input-nama").focus();
 }
 
 ambilSoal();
