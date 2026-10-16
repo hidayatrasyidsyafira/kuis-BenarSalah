@@ -40,9 +40,7 @@
             text-align: center;
             font-size: 1.2rem;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .form-group { margin-bottom: 15px; }
         .form-group label {
             display: block;
             font-weight: 600;
@@ -50,8 +48,7 @@
             margin-bottom: 6px;
             font-size: 0.95rem;
         }
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #b8d8e8;
@@ -60,42 +57,24 @@
             transition: border 0.2s;
             outline: none;
         }
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.15);
         }
 
-        .pengaturan {
-            background: #e3f2fd;
+        /* === INFO DURASI TOTAL === */
+        .info-durasi {
+            background: #fff3cd;
+            color: #856404;
             padding: 15px;
             border-radius: 12px;
-            margin-bottom: 25px;
-        }
-        .pengaturan label {
-            font-weight: 600;
-            color: #0c5460;
-            margin-right: 8px;
-        }
-        .pengaturan input[type="number"] {
-            width: 70px;
-            padding: 8px;
-            border: 1px solid #0097b8;
-            border-radius: 8px;
+            margin-bottom: 20px;
             font-size: 1rem;
+            font-weight: 600;
             text-align: center;
+            border-left: 5px solid #ffc107;
         }
-        .pengaturan button {
-            background: #0097b8;
-            color: white;
-            border: none;
-            padding: 9px 18px;
-            border-radius: 8px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .pengaturan button:hover { background: #007a94; }
+
         .tombol-mulai {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
             color: white;
@@ -109,16 +88,37 @@
             transition: transform 0.2s;
         }
         .tombol-mulai:hover { transform: scale(1.05); }
-        .timer {
-            background: #fff3cd;
-            padding: 12px;
+
+        /* === TIMER TOTAL === */
+        .timer-total {
+            background: linear-gradient(135deg, #fff3cd, #ffe69c);
+            padding: 15px;
             border-radius: 12px;
             margin-bottom: 15px;
             font-weight: bold;
             color: #856404;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             display: none;
+            border: 2px solid #ffc107;
+            letter-spacing: 1px;
         }
+        .timer-total.warning {
+            background: linear-gradient(135deg, #ffe0b2, #ffcc80);
+            color: #e65100;
+            border-color: #ff9800;
+            animation: pulse 1s infinite;
+        }
+        .timer-total.danger {
+            background: linear-gradient(135deg, #ffcdd2, #ef9a9a);
+            color: #b71c1c;
+            border-color: #f44336;
+            animation: pulse 0.6s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
         .progress { margin-bottom: 15px; color: #7f8c8d; font-size: 1.1rem; display: none; }
         .soal-box {
             background: #f8f9fa;
@@ -188,6 +188,46 @@
             font-size: 0.9rem;
             color: #7f8c8d;
         }
+
+        /* === OVERLAY WAKTU HABIS === */
+        .overlay-waktu-habis {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .overlay-waktu-habis .box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 450px;
+        }
+        .overlay-waktu-habis h2 {
+            color: #e74c3c;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .overlay-waktu-habis p {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        .overlay-waktu-habis button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .overlay-waktu-habis button:hover { background: #2980b9; }
     </style>
 </head>
 <body>
@@ -207,18 +247,17 @@
             </div>
         </div>
 
-        <div class="pengaturan" id="pengaturan">
-            <label>⏱️ Waktu per soal (detik):</label>
-            <input type="number" id="input-waktu" value="20" min="5" max="120">
-            <button onclick="terapkanWaktu()">Terapkan</button>
+        <div class="info-durasi">
+            ⏱️ Total waktu pengerjaan: <strong>20 menit</strong><br>
+            <small style="font-weight: normal;">Soal diacak otomatis untuk setiap siswa</small>
         </div>
 
         <button class="tombol-mulai" id="tombol-mulai" onclick="mulaiKuis()">▶️ MULAI</button>
 
         <div class="info-siswa" id="info-siswa"></div>
 
+        <div class="timer-total" id="timer-total">⏱️ Sisa Waktu: 20:00</div>
         <div class="progress" id="progress">Soal 1 dari 0</div>
-        <div class="timer" id="timer">⏱️ Waktu: 20 detik</div>
 
         <div id="layar-soal">
             <div class="soal-box" id="teks-soal"></div>
@@ -235,7 +274,7 @@
                 Jawabanmu sudah tersimpan. Terima kasih sudah mengerjakan! 🙌
             </p>
             <div class="status-kirim" id="status-kirim"></div>
-            <!-- <button class="lanjut-btn" style="display:inline-block;" onclick="tampilkanPembahasan()">📖 Lihat Semua Jawaban</button> -->
+            <button class="lanjut-btn" style="display:inline-block;" onclick="tampilkanPembahasan()">📖 Lihat Semua Jawaban</button>
             <button class="lanjut-btn" style="background:#2ecc71; display:inline-block;" onclick="mulaiUlang()">🔄 Mulai Ulang</button>
         </div>
 
@@ -246,29 +285,39 @@
         </div>
     </div>
 
+    <!-- Overlay Waktu Habis -->
+    <div class="overlay-waktu-habis" id="overlay-waktu-habis">
+        <div class="box">
+            <h2>⏰ Waktu Habis!</h2>
+            <p>Waktu pengerjaan 20 menit sudah berakhir.<br>Jawabanmu sudah tersimpan.</p>
+            <button onclick="tutupOverlayDanTampilHasil()">Lihat Hasil →</button>
+        </div>
+    </div>
+
 <script>
 /* =========================================================
-   ⚙️ KONFIGURASI GOOGLE SHEETS
-   Ganti URL di bawah dengan URL Web App dari Google Apps Script
+   ⚙️ KONFIGURASI
    ========================================================= */
 const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxHumfJu2Agl0Sk65WZNXFtgcXPmYXgAw4OcqyA8IM7NjNUkNc2DZfC2IbaJIHVmwgS5g/exec";
 
+// Durasi total kuis dalam detik (20 menit = 1200 detik)
+const DURASI_TOTAL_DETIK = 20 * 60;
+
 let daftarSoal = [];
 let nomor = 0, sudahDijawab = false;
-let sisaWaktu = 20, waktuDefault = 20, timerInterval;
+let sisaWaktuTotal = DURASI_TOTAL_DETIK, timerInterval;
 let riwayatJawaban = [];
 let namaSiswa = "", kelasSiswa = "";
+let kuisAktif = false;
 
-/* ---------- UTIL ---------- */
-function terapkanWaktu() {
-    const nilai = parseInt(document.getElementById("input-waktu").value);
-    if (nilai >= 5 && nilai <= 120) {
-        waktuDefault = nilai;
-        sisaWaktu = waktuDefault;
-        alert(`✅ Waktu diatur menjadi ${waktuDefault} detik per soal`);
-    } else {
-        alert("⚠️ Masukkan angka antara 5–120 detik");
+/* ---------- UTIL: AC AK SOAL (Fisher-Yates Shuffle) ---------- */
+function acakSoal(array) {
+    const arr = [...array]; // salin supaya tidak mengubah asli
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
     }
+    return arr;
 }
 
 /* ---------- AMBIL SOAL ---------- */
@@ -328,9 +377,12 @@ async function mulaiKuis() {
 
     await ambilSoal();
 
-    // Sembunyikan form & pengaturan
+    // === ACAK SOAL SETIAP SISWA MULAI ===
+    daftarSoal = acakSoal(daftarSoal);
+
+    // Sembunyikan form & info
     document.getElementById("form-identitas").style.display = "none";
-    document.getElementById("pengaturan").style.display = "none";
+    document.querySelector(".info-durasi").style.display = "none";
     document.getElementById("tombol-mulai").style.display = "none";
 
     // Tampilkan info siswa
@@ -339,18 +391,56 @@ async function mulaiKuis() {
     info.style.display = "block";
 
     // Tampilkan elemen kuis
+    document.getElementById("timer-total").style.display = "block";
     document.getElementById("progress").style.display = "block";
-    document.getElementById("timer").style.display = "block";
     document.getElementById("teks-soal").style.display = "flex";
     document.getElementById("tombol-jawaban").style.display = "flex";
+
+    // Mulai timer total 20 menit
+    kuisAktif = true;
+    sisaWaktuTotal = DURASI_TOTAL_DETIK;
+    updateTimerTotal();
+    mulaiTimerTotal();
 
     tampilSoal();
 }
 
+/* ---------- TIMER TOTAL 20 MENIT ---------- */
+function mulaiTimerTotal() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        sisaWaktuTotal--;
+        updateTimerTotal();
+
+        if (sisaWaktuTotal <= 0) {
+            clearInterval(timerInterval);
+            kuisAktif = false;
+            // Waktu habis → akhiri kuis otomatis
+            document.getElementById("overlay-waktu-habis").style.display = "flex";
+        }
+    }, 1000);
+}
+
+function updateTimerTotal() {
+    const el = document.getElementById("timer-total");
+    const menit = Math.floor(sisaWaktuTotal / 60);
+    const detik = sisaWaktuTotal % 60;
+    el.textContent = `⏱️ Sisa Waktu: ${String(menit).padStart(2, "0")}:${String(detik).padStart(2, "0")}`;
+
+    // Ubah warna sesuai sisa waktu
+    el.classList.remove("warning", "danger");
+    if (sisaWaktuTotal <= 60) {           // 1 menit terakhir
+        el.classList.add("danger");
+    } else if (sisaWaktuTotal <= 300) {   // 5 menit terakhir
+        el.classList.add("warning");
+    }
+}
+
 /* ---------- TAMPIL SOAL ---------- */
 function tampilSoal() {
+    if (!kuisAktif) return; // kalau waktu sudah habis, jangan lanjut
+
     sudahDijawab = false;
-    sisaWaktu = waktuDefault;
     document.getElementById("progress").textContent = `Soal ${nomor + 1} dari ${daftarSoal.length}`;
     document.getElementById("teks-soal").textContent = daftarSoal[nomor].teks;
     document.getElementById("tombol-lanjut").style.display = "none";
@@ -358,32 +448,13 @@ function tampilSoal() {
 
     // Aktifkan kembali tombol
     document.querySelectorAll(".tombol").forEach(b => b.disabled = false);
-
-    document.getElementById("timer").textContent = `⏱️ Waktu: ${sisaWaktu} detik`;
-    mulaiHitungMundur();
 }
 
-function mulaiHitungMundur() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        sisaWaktu--;
-        document.getElementById("timer").textContent = `⏱️ Waktu: ${sisaWaktu} detik`;
-        if (sisaWaktu <= 0) {
-            clearInterval(timerInterval);
-            if (!sudahDijawab) {
-                // Waktu habis → catat sebagai tidak dijawab
-                simpanJawaban(nomor, null);
-                lanjutOtomatis();
-            }
-        }
-    }, 1000);
-}
-
-/* ---------- CEK JAWABAN (hanya untuk flow UI, tidak ada skor) ---------- */
+/* ---------- CEK JAWABAN ---------- */
 function cekJawaban(pilihan) {
+    if (!kuisAktif) return;
     if (sudahDijawab) return;
     sudahDijawab = true;
-    clearInterval(timerInterval);
 
     // Nonaktifkan tombol
     document.querySelectorAll(".tombol").forEach(b => b.disabled = true);
@@ -393,16 +464,19 @@ function cekJawaban(pilihan) {
 
     document.getElementById("tombol-jawaban").style.display = "none";
 
+    // LANGSUNG lanjut ke soal berikutnya (tanpa tombol "Soal Berikutnya")
     if (nomor < daftarSoal.length - 1) {
-        document.getElementById("tombol-lanjut").style.display = "block";
+        setTimeout(() => {
+            nomor++;
+            tampilSoal();
+        }, 300); // jeda singkat 300ms biar tidak terlalu cepat
     } else {
-        setTimeout(tampilHasil, 800);
+        setTimeout(tampilHasil, 500);
     }
 }
 
 /* ---------- SIMPAN JAWABAN ---------- */
 function simpanJawaban(indexSoal, pilihan) {
-    // pilihan: true = BENAR, false = SALAH, null = tidak dijawab (waktu habis)
     let jawabanTeks = "TIDAK DIJAWAB";
     if (pilihan === true) jawabanTeks = "BENAR";
     else if (pilihan === false) jawabanTeks = "SALAH";
@@ -410,10 +484,10 @@ function simpanJawaban(indexSoal, pilihan) {
     riwayatJawaban.push({
         nomor: indexSoal,
         dijawab: pilihan,
-        jawabanTeks: jawabanTeks
+        jawabanTeks: jawabanTeks,
+        teksSoal: daftarSoal[indexSoal].teks
     });
 
-    // Kirim ke Google Sheets
     kirimKeSheets({
         nama: namaSiswa,
         kelas: kelasSiswa,
@@ -424,29 +498,8 @@ function simpanJawaban(indexSoal, pilihan) {
     });
 }
 
-/* ---------- KIRIM KE GOOGLE SHEETS ---------- */
-// function kirimKeSheets(data) {
-//     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
-//         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
-//         return;
-//     }
-
-//     const formData = new FormData();
-//     formData.append("data", JSON.stringify(data));
-
-//     const xhr = new XMLHttpRequest();
-//     xhr.open("POST", URL_GOOGLE_SHEETS, true);
-//     // JANGAN set Content-Type manual — biarkan browser atur untuk FormData
-//     xhr.onload = function() {
-//         console.log("✅ Response dari server:", xhr.responseText);
-//     };
-//     xhr.onerror = function() {
-//         console.error("❌ XHR error");
-//     };
-//     xhr.send(formData);
-// }
-
-    function kirimKeSheets(data) {
+/* ---------- KIRIM KE GOOGLE SHEETS (GET via query string) ---------- */
+function kirimKeSheets(data) {
     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
         return;
@@ -461,10 +514,7 @@ function simpanJawaban(indexSoal, pilihan) {
         waktu_jawab: data.waktu_jawab
     });
 
-    const urlLengkap = URL_GOOGLE_SHEETS + "?" + params.toString();
-    console.log("🔵 Mengirim ke:", urlLengkap);
-
-    fetch(urlLengkap, {
+    fetch(URL_GOOGLE_SHEETS + "?" + params.toString(), {
         method: "GET",
         mode: "no-cors"
     })
@@ -472,18 +522,7 @@ function simpanJawaban(indexSoal, pilihan) {
     .catch(err => console.error("❌ Gagal:", err));
 }
 
-/* ---------- LANJUT OTOMATIS (waktu habis) ---------- */
-function lanjutOtomatis() {
-    document.getElementById("tombol-jawaban").style.display = "none";
-    document.querySelectorAll(".tombol").forEach(b => b.disabled = true);
-    if (nomor < daftarSoal.length - 1) {
-        nomor++;
-        tampilSoal();
-    } else {
-        setTimeout(tampilHasil, 500);
-    }
-}
-
+/* ---------- SOAL BERIKUTNYA (tidak dipakai lagi karena auto-lanjut) ---------- */
 function soalBerikutnya() {
     nomor++;
     tampilSoal();
@@ -492,10 +531,17 @@ function soalBerikutnya() {
 /* ---------- HASIL AKHIR ---------- */
 function tampilHasil() {
     clearInterval(timerInterval);
+    kuisAktif = false;
     document.getElementById("layar-soal").style.display = "none";
     document.getElementById("layar-akhir").style.display = "block";
+    document.getElementById("timer-total").style.display = "none";
     document.getElementById("status-kirim").textContent =
         "📤 Semua jawaban sudah dikirim ke Google Sheets.";
+}
+
+function tutupOverlayDanTampilHasil() {
+    document.getElementById("overlay-waktu-habis").style.display = "none";
+    tampilHasil();
 }
 
 /* ---------- PEMBAHASAN ---------- */
@@ -515,7 +561,7 @@ function tampilkanPembahasan() {
         if (riwayat && riwayat.dijawab !== null && riwayat.dijawab !== undefined) {
             statusJawaban = `<span class="label-netral">📝 Jawabanmu: ${riwayat.jawabanTeks}</span>`;
         } else {
-            statusJawaban = `<span class="label-salah">⏰ Tidak dijawab (waktu habis)</span>`;
+            statusJawaban = `<span class="label-salah">⏰ Tidak dijawab</span>`;
         }
 
         div.innerHTML = `
@@ -530,18 +576,23 @@ function tampilkanPembahasan() {
 
 /* ---------- MULAI ULANG ---------- */
 function mulaiUlang() {
+    clearInterval(timerInterval);
     nomor = 0;
     riwayatJawaban = [];
     namaSiswa = "";
     kelasSiswa = "";
+    kuisAktif = false;
+    sisaWaktuTotal = DURASI_TOTAL_DETIK;
 
     document.getElementById("layar-akhir").style.display = "none";
     document.getElementById("layar-pembahasan").style.display = "none";
     document.getElementById("layar-soal").style.display = "block";
     document.getElementById("info-siswa").style.display = "none";
+    document.getElementById("timer-total").style.display = "none";
+    document.getElementById("progress").style.display = "none";
 
     document.getElementById("form-identitas").style.display = "block";
-    document.getElementById("pengaturan").style.display = "block";
+    document.querySelector(".info-durasi").style.display = "block";
     document.getElementById("tombol-mulai").style.display = "block";
 
     document.getElementById("input-nama").value = "";
@@ -549,6 +600,7 @@ function mulaiUlang() {
     document.getElementById("input-nama").focus();
 }
 
+/* ---------- INIT ---------- */
 ambilSoal();
 </script>
 </body>
