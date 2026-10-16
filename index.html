@@ -481,29 +481,38 @@ function simpanJawaban(indexSoal, pilihan) {
     if (pilihan === true) jawabanTeks = "BENAR";
     else if (pilihan === false) jawabanTeks = "SALAH";
 
+    // Simpan kunci jawaban langsung di riwayat
+    const kunciJawaban = daftarSoal[indexSoal].jawaban;
+
     riwayatJawaban.push({
         nomor: indexSoal,
         dijawab: pilihan,
         jawabanTeks: jawabanTeks,
+        kunci: kunciJawaban,           // ← SIMPAN KUNCI
         teksSoal: daftarSoal[indexSoal].teks
     });
-
-    // TIDAK KIRIM KE SHEETS DI SINI
-    // Data akan dikirim sekali di akhir kuis
 }
 
     /* ---------- KIRIM HASIL AKHIR KE SHEETS (SEKALI) ---------- */
 function kirimHasilAkhir() {
-    // Hitung jumlah jawaban BENAR
+    // Hitung jumlah jawaban BENAR (bandingkan dengan kunci yang sudah disimpan)
     let jumlahBenar = 0;
     riwayatJawaban.forEach(r => {
-        if (r.dijawab === true && daftarSoal[r.nomor].jawaban === true) jumlahBenar++;
+        if (r.dijawab !== null && r.dijawab !== undefined && r.dijawab === r.kunci) {
+            jumlahBenar++;
+        }
     });
-    // Catatan: kalau mau hitung "benar" berdasarkan jawaban siswa saja,
-    // tanpa cek kunci, ganti baris di atas dengan:
-    // riwayatJawaban.forEach(r => { if (r.jawabanTeks === "BENAR") jumlahBenar++; });
 
     const totalSoal = daftarSoal.length;
+    const jumlahDijawab = riwayatJawaban.filter(r => r.dijawab !== null).length;
+
+    console.log(`📊 Hasil: ${jumlahBenar} benar dari ${jumlahDijawab} dijawab (total ${totalSoal} soal)`);
+    console.log("📋 Detail:", riwayatJawaban.map(r => ({
+        soal: r.teksSoal.substring(0, 30),
+        dijawab: r.jawabanTeks,
+        kunci: r.kunci ? "BENAR" : "SALAH",
+        cocok: r.dijawab === r.kunci
+    })));
 
     if (!URL_GOOGLE_SHEETS || URL_GOOGLE_SHEETS.includes("XXXXXXXXXXXXX")) {
         console.warn("⚠️ URL Google Sheets belum dikonfigurasi.");
